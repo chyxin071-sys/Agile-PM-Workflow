@@ -4,7 +4,6 @@ description: "Guides novice PMs through a 7-step agile workflow: dialogue-based 
 ---
 
 # 敏捷产品经理需求产出工作流 (Agile PM Workflow)
-
 ## 触发方式
 当用户提供一个初步的想法或需求描述时，请严格按照以下**七个步骤**引导用户。
 **🚨 绝对强制指令：你必须一步一步（Step-by-Step）执行！绝不允许一次性输出所有步骤的结果。在每一个带有【等待用户确认】的步骤结束后，你必须停止输出，等待用户的回答！**
@@ -20,13 +19,14 @@ description: "Guides novice PMs through a 7-step agile workflow: dialogue-based 
 - **不要**要求用户填写复杂的固定模板，降低认知门槛。
 
 ### 1.2 核心维度评估与反馈
-当你接收到用户的初步需求后，**必须将以下 6 个关键维度的评估结果直接展示给用户**，告诉他们当前需求在哪些维度是清晰的，哪些是缺失的：
+当你接收到用户的初步需求后，**必须将以下 7 个关键维度的评估结果直接展示给用户**，告诉他们当前需求在哪些维度是清晰的，哪些是缺失的：
 1. **背景/痛点**：为什么要做？现状有什么问题？（必须）
 2. **业务目标**：做完后想达到什么效果？（必须）
 3. **用户与场景**：谁在什么具体情况下使用？（必须）
-4. **现有方案**：现在他们是怎么解决这个问题的？（重要）
-5. **业务规则**：有哪些必须遵守的限制或特定流程？（重要）
-6. **参考/竞品**：有没有喜欢的对标产品？（加分项）
+4. **核心用户旅程**：用户从接触到完成目标的关键路径是怎样的？中间有什么触点和痛点？（必须）
+5. **现有方案**：现在他们是怎么解决这个问题的？（重要）
+6. **业务规则**：有哪些必须遵守的限制或特定流程？（重要）
+7. **参考/竞品**：有没有喜欢的对标产品？（加分项）
 
 ### 1.3 深度追问与多轮确认 【等待用户确认】
 **🚨 关键规则：不要急于总结，必须进行至少 3 轮深度的启发式追问！**
@@ -63,9 +63,9 @@ description: "Guides novice PMs through a 7-step agile workflow: dialogue-based 
 根据步骤一的确认信息，直接生成一份详细的初步 **HTML 格式**文档（存放在 `prd/` 目录下）。这份初版 PRD 必须搭建好完整的文档结构骨架（参考 6.1 节的标准目录），并且必须深度填充以下部分：
 1. **项目基本信息**
 2. **需求背景与目标**：必须包含四列表格（目标类型、描述、衡量指标、目标值）。
-3. **用户使用场景（用户旅程图简述）**：用具体的场景描述典型用户的一天是如何使用该产品的，必须有代入感。
+3. **用户使用场景与旅程图（核心重点）**：必须使用表格或清晰的结构描述用户旅程（User Journey Map），包含：阶段、用户触点、用户行为、痛点/情绪、产品机会点，要具备强烈的代入感。
 4. **详细的功能清单与基础逻辑**：不能只列出模块和名称，必须详细梳理出核心的操作主线、前置条件、基本业务规则和数据流向。
-*（后续章节如详细方案带原型的表格、流程图等可先留空，并注明“待原型确认后补充”）*
+*（后续章节如详细方案带原型的模块、整体流程图等可先留空，并注明“待原型确认后补充”）*
 
 ### 3.2 用户确认 【等待用户确认】
 询问用户：“这是产品的详细第一版架构和业务逻辑，您看方向和基础逻辑准确吗？如果没问题，我们将先进行【原型设计】，通过具体的画面来进一步理清交互细节和可能遗漏的功能。”
@@ -81,6 +81,7 @@ description: "Guides novice PMs through a 7-step agile workflow: dialogue-based 
 1. 产出 **单文件 HTML 原型**，包含完整的 CSS 样式。
 2. 强制使用 **Tailwind CSS**，并采用现代、简洁的设计风格。
 3. 必须包含关键的交互状态（如：默认页、展开弹窗、成功提示等）。可以通过简单的原生 JavaScript 或 URL Hash (`#page1`) 来实现页面切换。
+4. **沙盒锁定支持 (Focus Mode)**：在编写原生 JavaScript 时，必须加入 URL 参数解析逻辑（如 `?focus=feature_id`）。当处于 focus 模式时，锁定或遮罩其他无关的交互区域（如设置 `pointer-events: none; opacity: 0.5`），仅允许用户操作对应的功能点。这为了后续在 PRD 嵌入原型时，实现“仅展示对应功能交互”的需求。
 
 ### 4.2 💡 强烈推荐使用 Impeccable Skills
 在生成原型前，AI 必须主动向用户推荐业界顶级的前端设计指令集：
@@ -124,25 +125,51 @@ description: "Guides novice PMs through a 7-step agile workflow: dialogue-based 
   10. **九、未来演进规划** (Roadmap)
   11. **十、附件** (数据字典/工艺标准等)
 
-### 6.2 详细方案表格 (沙盒切片嵌入)
-PRD 中的核心部分是“详细方案”。必须采用**四列表格**，并且在“原型”列中，将步骤四做好的原型进行“切片”或嵌入。
+### 6.2 详细方案设计 (独立功能模块化展示)
+PRD 中的核心部分是“详细方案”。必须摒弃传统的纯文字或简单表格，改为**模块化分块布局**。
 
-**如何进行原型切片与嵌入？**
+**对于每一个核心功能点，必须包含以下三部分**：
+1. **交互逻辑流程图**：使用 Mermaid 画出该功能的具体交互分支和异常流转。
+2. **详细规则描述**：文字说明触发条件、交互反馈、异常处理（如断网、空数据）。
+3. **专注模式沙盒切片**：使用 `<iframe>` 嵌入对应原型。
+
+**如何进行原型切片与沙盒锁定？**
 1. **Hash 路由定位**：确保原型 HTML 支持 URL Hash 路由（如 `index.html#login`）。
-2. **Iframe 嵌入**：在 Markdown 或 HTML 表格中，使用 `<iframe>` 标签引入对应的原型切片。
+2. **Focus 模式参数**：在 iframe 的 src 中加上专注参数（如 `?sandbox=true&focus=login`），原型代码会据此锁定无关功能。
 3. **尺寸控制 (Web vs 移动端)**：
-   - 如果是**移动端**原型：强制设定 iframe 的宽度（如 `width: 375px; height: 812px;`），并可以通过 CSS `transform: scale(0.7)` 将其缩小以适应表格。
-   - 如果是**Web端/后台**原型：使用响应式宽度（如 `width: 100%; height: 600px;`），让其充满单元格。
-   - **去除边框**：必须加上 `border: none; background: transparent;` 消除 iframe 默认边框。
-4. **沙盒隔离 (Sandbox)**：如果原型内部的 JavaScript 滚动或路由会干扰外部 PRD 文档，可以在 iframe 上添加 `sandbox="allow-scripts allow-same-origin"` 属性。
+   - 移动端原型：强制设定 iframe 的宽度（如 `width: 375px; height: 812px;`），可通过 CSS `transform: scale(0.7)` 缩小。
+   - Web端/后台原型：使用响应式宽度（如 `width: 100%; height: 600px;`）。
+   - 去除边框：加上 `border: none; background: transparent;`。
+4. **沙盒隔离 (Sandbox)**：在 iframe 上添加 `sandbox="allow-scripts allow-same-origin"` 属性。
 
-| 一级模块 | 二级功能 | 原型展示 | 详细描述 (规则与逻辑) |
-|---|---|---|---|
-| (合并单元格) | 功能名称 | `<iframe src="../prototype.html#hash" style="width:375px; height:812px; transform:scale(0.7); transform-origin:0 0; border:none;"></iframe>` | 1. 触发条件<br>2. 交互反馈<br>3. 异常处理 |
+**HTML 结构示例**：
+```html
+<div class="feature-module">
+  <h3>功能：用户登录</h3>
+  <div class="feature-content" style="display: flex; gap: 20px;">
+    <div class="logic-rules" style="flex: 1;">
+      <h4>交互流程图</h4>
+      <div class="mermaid">
+        flowchart TD
+        ...
+      </div>
+      <h4>规则描述</h4>
+      <ul>
+        <li><strong>触发条件</strong>: ...</li>
+        <li><strong>交互反馈</strong>: ...</li>
+      </ul>
+    </div>
+    <div class="sandbox-preview">
+      <iframe src="../prototype.html?focus=login#login" style="width:375px; height:812px; border:none;" sandbox="allow-scripts allow-same-origin"></iframe>
+    </div>
+  </div>
+</div>
+```
 
 ### 6.3 交付检查
-- [ ] 包含了用户使用场景/旅程图。
-- [ ] 详细方案表格中图文对应（左边/旁边是原型，右边是逻辑）。
+- [ ] 包含了清晰的**用户旅程图**（User Journey Map）。
+- [ ] 详细方案中，每个功能点都有对应的**Mermaid流程图**。
+- [ ] 详细方案中，每个原型沙盒都开启了**锁定无关功能的 Focus 模式**。
 - [ ] 异常情况（断网、空数据、权限不足）已被补充到文档中。
 
 ---
